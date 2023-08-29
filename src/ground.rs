@@ -5,8 +5,10 @@ use playdate_rs::{
     graphics::{Bitmap, LCDBitmapFlip},
     math::{Point2D, Rect, Size2D},
     sprite::Sprite,
-    PLAYDATE,
+    App, PLAYDATE,
 };
+
+use crate::{DinoGame, GameState};
 
 pub struct Ground {
     ground_sprites: (Sprite, Sprite),
@@ -14,39 +16,51 @@ pub struct Ground {
 }
 
 impl Ground {
+    const HEIGHT: f32 = 64.0;
+    pub const COLLIDE_HEIGHT: f32 = 64.0 - 18.0;
+
     pub fn new() -> Self {
         let ground = Sprite::new();
         let bitmap = Bitmap::open(2400, 24, "ground").unwrap();
         ground.set_image(bitmap, LCDBitmapFlip::kBitmapUnflipped);
-        ground.set_bounds(Rect {
-            origin: Point2D::new(0.0, DISPLAY_HEIGHT as f32 - 24.0),
-            size: Size2D::new(2400.0, 24.0),
-        });
         ground.set_collide_rect(Rect {
             origin: Point2D::new(0.0, 18.0),
-            size: Size2D::new(2400.0, 6.0),
+            size: Size2D::new(2400.0, Self::HEIGHT),
         });
         ground.collisions_enabled();
         ground.set_z_index(-100);
         let ground2 = ground.clone();
-        ground2.set_bounds(Rect {
-            origin: Point2D::new(2400.0, DISPLAY_HEIGHT as f32 - 24.0),
-            size: Size2D::new(2400.0, 24.0),
-        });
         ground2.set_collide_rect(Rect {
             origin: Point2D::new(0.0, 18.0),
-            size: Size2D::new(2400.0, 6.0),
+            size: Size2D::new(2400.0, Self::HEIGHT),
         });
         ground2.set_z_index(-100);
         PLAYDATE.sprite.add_sprite(&ground);
         PLAYDATE.sprite.add_sprite(&ground2);
-        Self {
+        let mut ground = Self {
             ground_sprites: (ground, ground2),
             horizontal_velocity: RefCell::new(0.0),
-        }
+        };
+        ground.reset();
+        ground
+    }
+
+    pub fn reset(&mut self) {
+        self.ground_sprites.0.set_bounds(Rect {
+            origin: Point2D::new(0.0, DISPLAY_HEIGHT as f32 - Self::HEIGHT),
+            size: Size2D::new(2400.0, 24.0),
+        });
+        self.ground_sprites.1.set_bounds(Rect {
+            origin: Point2D::new(2400.0, DISPLAY_HEIGHT as f32 - Self::HEIGHT),
+            size: Size2D::new(2400.0, 24.0),
+        });
+        *self.horizontal_velocity.borrow_mut() = 10.0;
     }
 
     pub fn update(&mut self, delta: f32) {
+        if *DinoGame::get().state.borrow() != GameState::Playing {
+            return;
+        }
         // move sprites
         let mut velocity = self.horizontal_velocity.borrow_mut();
         let step = *velocity * delta;
