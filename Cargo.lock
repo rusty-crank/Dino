@@ -139,6 +139,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "libm"
+version = "0.2.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f7012b1bbb0719e1097c47611d3898568c546d597c2e74d66f6087edd5233ff4"
+
+[[package]]
 name = "lock_api"
 version = "0.4.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -192,6 +198,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f30b0abd723be7e2ffca1272140fac1a2f084c77ec3e123c192b66af1ee9e6c2"
 dependencies = [
  "autocfg",
+ "libm",
 ]
 
 [[package]]
@@ -208,7 +215,7 @@ checksum = "19b17cddbe7ec3f8bc800887bab5e717348c95ea2ca0b1bf0837fb964dc67099"
 
 [[package]]
 name = "playdate-rs"
-version = "0.0.7"
+version = "0.0.10"
 dependencies = [
  "bitmask-enum",
  "no_std_io",
@@ -220,7 +227,7 @@ dependencies = [
 
 [[package]]
 name = "playdate-rs-macros"
-version = "0.0.7"
+version = "0.0.10"
 dependencies = [
  "quote",
  "syn",
@@ -228,7 +235,7 @@ dependencies = [
 
 [[package]]
 name = "playdate-rs-sys"
-version = "0.0.7"
+version = "0.0.10"
 dependencies = [
  "bindgen",
  "home",
