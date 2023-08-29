@@ -52,8 +52,7 @@ impl Animation {
 
     fn draw(&self) {
         PLAYDATE.graphics.draw_scaled_bitmap(
-            &self
-                .table
+            self.table
                 .get(self.frames[*self.current_frame.borrow()])
                 .unwrap(),
             vec2!(0, 0),

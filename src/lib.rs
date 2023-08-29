@@ -38,11 +38,11 @@ impl App for DinoGame {
         PLAYDATE.graphics.clear(LCDSolidColor::kColorClear);
         // Update game state
         let pushed = PLAYDATE.system.get_button_state().pushed;
-        if *self.state.borrow() == GameState::Ready || *self.state.borrow() == GameState::Dead {
-            if pushed.contains(Buttons::A) {
-                self.ground.reset();
-                *self.state.borrow_mut() = GameState::Playing;
-            }
+        if (*self.state.borrow() == GameState::Ready || *self.state.borrow() == GameState::Dead)
+            && pushed.contains(Buttons::A)
+        {
+            self.ground.reset();
+            *self.state.borrow_mut() = GameState::Playing;
         }
         // Update and draw sprites
         self.ground.update(delta);
