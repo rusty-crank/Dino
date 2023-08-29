@@ -49,6 +49,10 @@ impl Ground {
         *self.horizontal_velocity.borrow_mut() = 10.0;
     }
 
+    pub fn get_velocity(&self) -> f32 {
+        *self.horizontal_velocity.borrow()
+    }
+
     pub fn update(&mut self, delta: f32) {
         if *DinoGame::get().state.borrow() != GameState::Playing {
             return;

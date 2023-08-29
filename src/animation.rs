@@ -7,7 +7,7 @@ use playdate_rs::{
     PLAYDATE,
 };
 
-struct Animation {
+pub struct Animation {
     table: Arc<BitmapTable>,
     frames: Vec<usize>,
     frame_time: f32,
@@ -28,7 +28,7 @@ impl Animation {
         }
     }
 
-    fn set_scale(&mut self, scale: f32) {
+    pub fn set_scale(&mut self, scale: f32) {
         self.scale = scale;
     }
 

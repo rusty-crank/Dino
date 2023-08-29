@@ -130,8 +130,15 @@ impl Dino {
         anim.add_state(DinoState::Jump, "dino", [1], 0.5);
         anim.add_state(DinoState::Run, "dino", [3, 4], 0.2);
         anim.add_state(DinoState::Duck, "dino", [5, 6], 0.2);
+        anim.add_state(DinoState::Dead, "dino", [7], 1.0);
         anim.set_scale(0.5);
         anim
+    }
+
+    pub fn get_collide_rect(&self) -> Rect<f32> {
+        let rect = self.sprite.get_bounds();
+        let crect = self.sprite.get_collide_rect();
+        rect!(x: rect.x + crect.x, y: rect.y + crect.y, w: crect.width, h: crect.height)
     }
 
     pub fn update(&mut self, delta: f32) {
@@ -139,6 +146,9 @@ impl Dino {
         let old_state = self.animations.get_current_state();
         self.animations.update(&self.sprite, delta, self);
         let state = self.animations.get_current_state();
+        if *DinoGame::get().state.borrow() != GameState::Playing {
+            return;
+        }
         // update collide rect
         self.sprite.set_collide_rect(match state {
             DinoState::Duck => DUCK_COLLIDE_RECT,
@@ -152,7 +162,7 @@ impl Dino {
             (DinoState::Dead, DinoState::Run) => {
                 self.sprite
                     .move_to(vec2!(0.0, DISPLAY_HEIGHT as f32 - 47.0 - 6.0));
-                *self.vertical_velocity.borrow_mut() = 0.0;
+                *velocity = 0.0;
             }
             _ => {}
         }
