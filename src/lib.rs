@@ -1,6 +1,8 @@
 #![no_std]
 
 extern crate alloc;
+#[macro_use]
+extern crate playdate_rs;
 
 mod animation;
 mod dino;
@@ -47,7 +49,7 @@ impl App for DinoGame {
         self.dino.update(delta);
         PLAYDATE.sprite.draw_sprites();
         // Draw FPS
-        PLAYDATE.system.draw_fps(0, 0);
+        PLAYDATE.system.draw_fps(vec2!(0, 0));
     }
 }
 

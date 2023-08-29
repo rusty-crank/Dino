@@ -56,10 +56,8 @@ impl Animation {
                 .table
                 .get(self.frames[*self.current_frame.borrow()])
                 .unwrap(),
-            0,
-            0,
-            self.scale,
-            self.scale,
+            vec2!(0, 0),
+            vec2!(self.scale, self.scale),
         );
     }
 

@@ -3,7 +3,7 @@ use core::cell::RefCell;
 use playdate_rs::{
     display::DISPLAY_HEIGHT,
     graphics::{Bitmap, LCDBitmapFlip, LCDSolidColor},
-    math::{Point2D, Rect, Size2D},
+    math::Rect,
     sprite::Sprite,
     system::Buttons,
     App, PLAYDATE,
@@ -25,13 +25,17 @@ enum DinoState {
 }
 
 const COLLIDE_RECT: Rect<f32> = Rect {
-    origin: Point2D::new((160.0 - 88.0) / 2.0 / 2.0, 0.0),
-    size: Size2D::new(88.0 / 2.0, 94.0 / 2.0),
+    x: (160.0 - 88.0) / 2.0 / 2.0,
+    y: 0.0,
+    width: 88.0 / 2.0,
+    height: 94.0 / 2.0,
 };
 
 const DUCK_COLLIDE_RECT: Rect<f32> = Rect {
-    origin: Point2D::new((160.0 - 118.0) / 2.0 / 2.0, (94.0 - 60.0) / 2.0),
-    size: Size2D::new(118.0 / 2.0, 60.0 / 2.0),
+    x: (160.0 - 118.0) / 2.0 / 2.0,
+    y: (94.0 - 60.0) / 2.0,
+    width: 118.0 / 2.0,
+    height: 60.0 / 2.0,
 };
 
 impl AnimationState for DinoState {
@@ -77,7 +81,7 @@ impl AnimationState for DinoState {
             if *DinoGame::get().state.borrow() == GameState::Dead {
                 return Some(Self::Dead);
             }
-            let bottom = DISPLAY_HEIGHT as f32 - bounds.height() - bounds.origin.y;
+            let bottom = DISPLAY_HEIGHT as f32 - bounds.height - bounds.y;
             if bottom <= Ground::COLLIDE_HEIGHT {
                 return Some(Self::Run);
             }
@@ -105,9 +109,9 @@ impl Dino {
         let sprite = Sprite::new();
         let bitmap = Bitmap::new(80, 47, LCDSolidColor::kColorClear);
         sprite.set_image(bitmap, LCDBitmapFlip::kBitmapUnflipped);
-        sprite.set_bounds(Rect {
-            origin: Point2D::new(0.0, DISPLAY_HEIGHT as f32 - Ground::COLLIDE_HEIGHT - 47.0),
-            size: Size2D::new(80.0, 47.0),
+        sprite.set_bounds(rect! {
+            x: 0.0, y: DISPLAY_HEIGHT as f32 - Ground::COLLIDE_HEIGHT - 47.0,
+            w: 80.0, h: 47.0,
         });
         sprite.set_collide_rect(COLLIDE_RECT);
         sprite.collisions_enabled();
@@ -146,7 +150,8 @@ impl Dino {
             (DinoState::Idle, DinoState::Run) => *velocity = -250.0,
             (DinoState::Run, DinoState::Jump) => *velocity = -250.0,
             (DinoState::Dead, DinoState::Run) => {
-                self.sprite.move_to(0.0, DISPLAY_HEIGHT as f32 - 47.0 - 6.0);
+                self.sprite
+                    .move_to(vec2!(0.0, DISPLAY_HEIGHT as f32 - 47.0 - 6.0));
                 *self.vertical_velocity.borrow_mut() = 0.0;
             }
             _ => {}
@@ -155,14 +160,14 @@ impl Dino {
         *velocity += 500.0 * delta;
         // update position
         let step = *velocity * delta;
-        let height = self.sprite.get_bounds().size.height;
+        let height = self.sprite.get_bounds().height;
         let mut pos = self.sprite.get_position();
         let old_y = pos.y;
         pos.y += step;
         if pos.y + height + 6.0 > DISPLAY_HEIGHT as f32 {
             pos.y = DISPLAY_HEIGHT as f32 - height - 6.0;
         }
-        PLAYDATE.sprite.move_with_collisions(&self.sprite, pos);
+        self.sprite.move_with_collisions(pos);
         let pos2 = self.sprite.get_position();
         if pos2.y == old_y {
             *velocity = 0.0;
