@@ -4,7 +4,7 @@ use playdate_rs::{
     graphics::{Bitmap, BitmapTable, LCDBitmapFlip, LCDSolidColor},
     rand::Rng,
     sprite::Sprite,
-    PLAYDATE,
+    App, PLAYDATE,
 };
 
 use crate::{
@@ -16,6 +16,7 @@ use crate::{
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 enum ObstacleKind {
     Bird,
+    LowBird,
     CactusSmall1,
     CactusSmall2,
     CactusSmall3,
@@ -28,6 +29,7 @@ impl ObstacleKind {
     fn random() -> Self {
         let kinds = [
             ObstacleKind::Bird,
+            ObstacleKind::LowBird,
             ObstacleKind::CactusSmall1,
             ObstacleKind::CactusSmall2,
             ObstacleKind::CactusSmall3,
@@ -73,12 +75,17 @@ impl Obstacle {
         const BIRD_Y: f32 = 88.0;
         println!("Create {:?}", self.kind);
         match self.kind {
-            ObstacleKind::Bird => {
+            ObstacleKind::Bird | ObstacleKind::LowBird => {
                 let image = Bitmap::new(size!(46, 34), LCDSolidColor::kColorClear);
+                let pos_y = if self.kind == ObstacleKind::Bird {
+                    BIRD_Y
+                } else {
+                    BIRD_Y + 34.0
+                };
                 self.sprite
                     .set_image(image, LCDBitmapFlip::kBitmapUnflipped);
                 self.sprite
-                    .set_bounds(rect!(x: pos_x, y: BIRD_Y, w: 46.0, h: 34.0));
+                    .set_bounds(rect!(x: pos_x, y: pos_y, w: 46.0, h: 34.0));
                 self.sprite
                     .set_collide_rect(rect!(x: 0.0, y: 0.0, w: 46.0, h: 34.0));
                 self.sprite.collisions_enabled();
@@ -128,8 +135,9 @@ impl Obstacle {
             return;
         }
         let pos = self.sprite.get_position();
+        let velocity = DinoGame::get().ground.get_velocity();
         self.sprite
-            .move_to(vec2!(x: pos.x - 100.0 * delta, y: pos.y));
+            .move_to(vec2!(x: pos.x - velocity * delta, y: pos.y));
         if let Some(anim) = &self.anim {
             PLAYDATE
                 .graphics

@@ -46,7 +46,7 @@ impl Ground {
         self.ground_sprites
             .1
             .set_bounds(rect!(x: 2400.0, y: y, w: 2400.0, h: 24.0));
-        *self.horizontal_velocity.borrow_mut() = 10.0;
+        *self.horizontal_velocity.borrow_mut() = 150.0;
     }
 
     pub fn sprite_is_ground(&self, s: &Sprite) -> bool {

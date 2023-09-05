@@ -170,8 +170,8 @@ impl Dino {
         // update velocity
         let mut velocity = self.vertical_velocity.borrow_mut();
         match (old_state, state) {
-            (DinoState::Idle, DinoState::Run) => *velocity = -250.0,
-            (DinoState::Run, DinoState::Jump) => *velocity = -250.0,
+            (DinoState::Idle, DinoState::Run) => *velocity = -300.0,
+            (DinoState::Run, DinoState::Jump) => *velocity = -300.0,
             (DinoState::Dead, DinoState::Run) => {
                 self.sprite.move_to(INITLAL_POSITION);
                 *velocity = 0.0;
