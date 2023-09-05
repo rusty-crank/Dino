@@ -10,7 +10,7 @@ use playdate_rs::{
 use crate::{DinoGame, GameState};
 
 pub struct Ground {
-    ground_sprites: (Sprite, Sprite),
+    pub ground_sprites: (Sprite, Sprite),
     horizontal_velocity: RefCell<f32>,
 }
 
@@ -20,7 +20,7 @@ impl Ground {
 
     pub fn new() -> Self {
         let ground = Sprite::new();
-        let bitmap = Bitmap::open(2400, 24, "ground").unwrap();
+        let bitmap = Bitmap::open(size!(2400, 24), "ground").unwrap();
         ground.set_image(bitmap, LCDBitmapFlip::kBitmapUnflipped);
         ground.set_collide_rect(rect!(x: 0.0, y: 18.0, w: 2400.0, h: Self::HEIGHT));
         ground.collisions_enabled();
@@ -47,6 +47,10 @@ impl Ground {
             .1
             .set_bounds(rect!(x: 2400.0, y: y, w: 2400.0, h: 24.0));
         *self.horizontal_velocity.borrow_mut() = 10.0;
+    }
+
+    pub fn sprite_is_ground(&self, s: &Sprite) -> bool {
+        s == &self.ground_sprites.0 || s == &self.ground_sprites.1
     }
 
     pub fn get_velocity(&self) -> f32 {

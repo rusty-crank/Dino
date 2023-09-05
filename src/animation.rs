@@ -1,11 +1,7 @@
 use core::cell::RefCell;
 
 use alloc::{borrow::ToOwned, collections::BTreeMap, string::String, sync::Arc, vec::Vec};
-use playdate_rs::{
-    graphics::{BitmapTable, LCDSolidColor},
-    sprite::Sprite,
-    PLAYDATE,
-};
+use playdate_rs::{graphics::BitmapTable, sprite::Sprite, PLAYDATE};
 
 pub struct Animation {
     table: Arc<BitmapTable>,
@@ -134,12 +130,19 @@ impl<S: AnimationState> AnimationStateMachine<S> {
             *current_state = next_state;
         }
         PLAYDATE.graphics.push_context(bitmap);
-        PLAYDATE.graphics.clear(LCDSolidColor::kColorClear);
+        PLAYDATE.graphics.clear(crate::sprite_bg_color());
         animation.play(delta);
         PLAYDATE.graphics.pop_context();
     }
 
     pub fn get_current_state(&self) -> S {
         self.current_state.borrow().clone()
+    }
+
+    pub fn reset(&self) {
+        *self.current_state.borrow_mut() = S::INITIAL;
+        for (_, animation) in self.animations.iter() {
+            animation.reset();
+        }
     }
 }
