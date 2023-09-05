@@ -10,7 +10,7 @@ use playdate_rs::{
 };
 
 use crate::{
-    animation::{AnimationState, AnimationStateMachine},
+    animation::{AnimationState, AnimationStateMachine, BitmapAnimation},
     ground::Ground,
     DinoGame, GameState,
 };
@@ -136,15 +136,17 @@ impl Dino {
     }
 
     fn create_animation_state_machine() -> AnimationStateMachine<DinoState> {
-        let mut anim = AnimationStateMachine::new();
-        anim.add_bitmap_table("dino", "dino", 8, 160, 94);
-        anim.add_state(DinoState::Idle, "dino", [1, 2], 0.5);
-        anim.add_state(DinoState::Jump, "dino", [1], 0.5);
-        anim.add_state(DinoState::Run, "dino", [3, 4], 0.2);
-        anim.add_state(DinoState::Duck, "dino", [5, 6], 0.2);
-        anim.add_state(DinoState::Dead, "dino", [7], 1.0);
-        anim.set_scale(0.5);
-        anim
+        let mut asm = AnimationStateMachine::new();
+        let table = asm.add_bitmap_table("dino", "dino", 8, 160, 94);
+        let anim = |frames: &[usize], frame_time: f32| {
+            BitmapAnimation::new(table.clone(), frames, frame_time, 0.5)
+        };
+        asm.add_state(DinoState::Idle, anim(&[1, 2], 0.5));
+        asm.add_state(DinoState::Jump, anim(&[1], 0.5));
+        asm.add_state(DinoState::Run, anim(&[3, 4], 0.2));
+        asm.add_state(DinoState::Duck, anim(&[5, 6], 0.2));
+        asm.add_state(DinoState::Dead, anim(&[7], 1.0));
+        asm
     }
 
     pub fn reset(&mut self) {

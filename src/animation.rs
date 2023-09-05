@@ -1,9 +1,16 @@
 use core::cell::RefCell;
 
-use alloc::{borrow::ToOwned, collections::BTreeMap, string::String, sync::Arc, vec::Vec};
+use alloc::{
+    borrow::ToOwned, boxed::Box, collections::BTreeMap, string::String, sync::Arc, vec::Vec,
+};
 use playdate_rs::{graphics::BitmapTable, sprite::Sprite, PLAYDATE};
 
-pub struct Animation {
+pub trait Animation {
+    fn update(&self, delta: f32);
+    fn reset(&self);
+}
+
+pub struct BitmapAnimation {
     table: Arc<BitmapTable>,
     frames: Vec<usize>,
     frame_time: f32,
@@ -12,27 +19,30 @@ pub struct Animation {
     scale: f32,
 }
 
-impl Animation {
-    pub fn new(table: Arc<BitmapTable>, frames: impl AsRef<[usize]>, frame_time: f32) -> Self {
+impl BitmapAnimation {
+    pub fn new(
+        table: Arc<BitmapTable>,
+        frames: impl AsRef<[usize]>,
+        frame_time: f32,
+        scale: f32,
+    ) -> Self {
         Self {
             table,
             frames: frames.as_ref().to_vec(),
             frame_time,
             current_frame: RefCell::new(0),
             current_time: RefCell::new(0.0),
-            scale: 1.0,
+            scale: scale,
         }
-    }
-
-    pub fn set_scale(&mut self, scale: f32) {
-        self.scale = scale;
     }
 
     fn reset(&self) {
         *self.current_frame.borrow_mut() = 0;
         *self.current_time.borrow_mut() = 0.0;
     }
+}
 
+impl Animation for BitmapAnimation {
     fn update(&self, delta: f32) {
         let mut current_time = self.current_time.borrow_mut();
         let mut current_frame = self.current_frame.borrow_mut();
@@ -44,21 +54,15 @@ impl Animation {
             }
             *current_time = 0.0;
         }
-    }
-
-    fn draw(&self) {
         PLAYDATE.graphics.draw_scaled_bitmap(
-            self.table
-                .get(self.frames[*self.current_frame.borrow()])
-                .unwrap(),
+            self.table.get(self.frames[*current_frame]).unwrap(),
             vec2!(0, 0),
             vec2!(self.scale, self.scale),
         );
     }
 
-    pub fn play(&self, delta: f32) {
-        self.update(delta);
-        self.draw();
+    fn reset(&self) {
+        self.reset();
     }
 }
 
@@ -70,9 +74,8 @@ pub trait AnimationState: PartialEq + Clone + Ord {
 
 pub struct AnimationStateMachine<S: AnimationState> {
     bitmap_tables: BTreeMap<String, Arc<BitmapTable>>,
-    animations: BTreeMap<S, Animation>,
+    animations: BTreeMap<S, Box<dyn Animation>>,
     current_state: RefCell<S>,
-    scale: f32,
 }
 
 impl<S: AnimationState> AnimationStateMachine<S> {
@@ -81,14 +84,6 @@ impl<S: AnimationState> AnimationStateMachine<S> {
             bitmap_tables: BTreeMap::new(),
             animations: BTreeMap::new(),
             current_state: RefCell::new(S::INITIAL),
-            scale: 1.0,
-        }
-    }
-
-    pub fn set_scale(&mut self, scale: f32) {
-        self.scale = scale;
-        for (_, animation) in self.animations.iter_mut() {
-            animation.set_scale(scale);
         }
     }
 
@@ -99,23 +94,15 @@ impl<S: AnimationState> AnimationStateMachine<S> {
         count: usize,
         width: u32,
         height: u32,
-    ) {
+    ) -> Arc<BitmapTable> {
         let table = Arc::new(BitmapTable::open(count, width, height, path).unwrap());
         self.bitmap_tables
             .insert(name.as_ref().to_owned(), table.clone());
+        table
     }
 
-    pub fn add_state(
-        &mut self,
-        state: S,
-        bitmap: impl AsRef<str>,
-        frames: impl AsRef<[usize]>,
-        frame_time: f32,
-    ) {
-        let table = &self.bitmap_tables[bitmap.as_ref()];
-        let mut animation = Animation::new(table.clone(), frames, frame_time);
-        animation.set_scale(self.scale);
-        self.animations.insert(state, animation);
+    pub fn add_state(&mut self, state: S, anim: impl Animation + 'static) {
+        self.animations.insert(state, Box::new(anim));
     }
 
     pub fn update(&self, sprite: &Sprite, delta: f32, payload: &S::Payload) {
@@ -131,7 +118,7 @@ impl<S: AnimationState> AnimationStateMachine<S> {
         }
         PLAYDATE.graphics.push_context(bitmap);
         PLAYDATE.graphics.clear(crate::sprite_bg_color());
-        animation.play(delta);
+        animation.update(delta);
         PLAYDATE.graphics.pop_context();
     }
 

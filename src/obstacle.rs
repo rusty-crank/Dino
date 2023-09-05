@@ -7,7 +7,11 @@ use playdate_rs::{
     App, PLAYDATE,
 };
 
-use crate::{animation::Animation, ground::Ground, DinoGame, GameState};
+use crate::{
+    animation::{Animation, BitmapAnimation},
+    ground::Ground,
+    DinoGame, GameState,
+};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 enum ObstacleKind {
@@ -49,7 +53,7 @@ pub struct ObstacleImages {
 
 pub struct Obstacle {
     kind: ObstacleKind,
-    anim: Option<Animation>,
+    anim: Option<BitmapAnimation>,
     sprite: Sprite,
 }
 
@@ -79,8 +83,12 @@ impl Obstacle {
                     .set_collide_rect(rect!(x: 0.0, y: 0.0, w: 46.0, h: 34.0));
                 self.sprite.collisions_enabled();
                 PLAYDATE.sprite.add_sprite(&self.sprite);
-                self.anim = Some(Animation::new(images.bird.clone(), [0, 1].as_ref(), 0.1));
-                self.anim.as_mut().unwrap().set_scale(0.5);
+                self.anim = Some(BitmapAnimation::new(
+                    images.bird.clone(),
+                    [0, 1].as_ref(),
+                    0.1,
+                    0.5,
+                ));
             }
             _ => {
                 let original_image = match self.kind {
@@ -127,9 +135,15 @@ impl Obstacle {
                 .graphics
                 .push_context(self.sprite.get_image().unwrap());
             PLAYDATE.graphics.clear(crate::sprite_bg_color());
-            anim.play(delta);
+            anim.update(delta);
             PLAYDATE.graphics.pop_context();
         }
+    }
+}
+
+impl Drop for Obstacle {
+    fn drop(&mut self) {
+        PLAYDATE.sprite.remove_sprite(&self.sprite);
     }
 }
 
@@ -155,9 +169,6 @@ impl Obstacles {
     }
 
     pub fn reset(&mut self) {
-        for o in &self.obstacles {
-            PLAYDATE.sprite.remove_sprite(&o.sprite);
-        }
         self.obstacles.clear();
     }
 
