@@ -31,7 +31,7 @@ impl ObstacleKind {
             ObstacleKind::CactusBig2,
             ObstacleKind::CactusBig3,
         ];
-        let i: usize = PLAYDATE.system.rand().gen_range(0..kinds.len());
+        let i: usize = playdate_rs::util::rand::rng().gen_range(0..kinds.len());
         kinds[i]
         // ObstacleKind::Bird
     }
