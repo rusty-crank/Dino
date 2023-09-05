@@ -7,18 +7,20 @@ extern crate playdate_rs;
 mod animation;
 mod dino;
 mod ground;
+mod mask;
 mod obstacle;
 
 use core::cell::RefCell;
 
 use dino::Dino;
 use ground::Ground;
+use mask::Mask;
 use obstacle::Obstacles;
 use playdate_rs::graphics::LCDSolidColor;
 use playdate_rs::system::Buttons;
 use playdate_rs::{app, println, App, PLAYDATE};
 
-const SHOW_BOUNDING_BOX: bool = true;
+const SHOW_BOUNDING_BOX: bool = false;
 
 fn sprite_bg_color() -> LCDSolidColor {
     if SHOW_BOUNDING_BOX {
@@ -33,6 +35,7 @@ pub struct DinoGame {
     dino: Dino,
     ground: Ground,
     obstacles: Obstacles,
+    mask: Mask,
     state: RefCell<GameState>,
 }
 
@@ -57,6 +60,7 @@ impl App for DinoGame {
             dino: Dino::new(),
             ground: Ground::new(),
             obstacles: Obstacles::new(),
+            mask: Mask::new(),
             state: RefCell::new(GameState::Ready),
         }
     }
@@ -73,6 +77,7 @@ impl App for DinoGame {
         self.ground.update(delta);
         self.dino.update(delta);
         self.obstacles.update(delta);
+        self.mask.update(delta);
         PLAYDATE.sprite.draw_sprites();
         // Draw FPS
         PLAYDATE.system.draw_fps(vec2!(0, 0));

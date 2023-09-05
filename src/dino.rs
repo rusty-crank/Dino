@@ -27,7 +27,7 @@ enum DinoState {
 const IMAGE_SIZE: Size<f32> = size!(160.0, 94.0);
 const SPRITE_SIZE: Size<f32> = size!(IMAGE_SIZE.width / 2.0, IMAGE_SIZE.height / 2.0);
 const INITLAL_BOUNDS: Rect<f32> = Rect {
-    x: 0.0,
+    x: 20.0,
     y: DISPLAY_HEIGHT as f32 - Ground::COLLIDE_HEIGHT - SPRITE_SIZE.height,
     width: SPRITE_SIZE.width,
     height: SPRITE_SIZE.height,
