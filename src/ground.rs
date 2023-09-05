@@ -4,7 +4,7 @@ use playdate_rs::{
     display::DISPLAY_HEIGHT,
     graphics::{Bitmap, LCDBitmapFlip},
     sprite::Sprite,
-    App, PLAYDATE,
+    PLAYDATE,
 };
 
 use crate::{DinoGame, GameState};
@@ -58,7 +58,7 @@ impl Ground {
     }
 
     pub fn update(&mut self, delta: f32) {
-        if *DinoGame::get().state.borrow() != GameState::Playing {
+        if DinoGame::get_game_state() != GameState::Playing {
             return;
         }
         // move sprites

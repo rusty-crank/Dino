@@ -40,8 +40,12 @@ pub struct DinoGame {
 }
 
 impl DinoGame {
+    fn get_game_state() -> GameState {
+        *Self::get().state.borrow()
+    }
+
     fn is_ready_or_dead(&self) -> bool {
-        let state = *self.state.borrow();
+        let state = DinoGame::get_game_state();
         state == GameState::Ready || state == GameState::Dead
     }
 

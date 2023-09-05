@@ -4,7 +4,7 @@ use playdate_rs::{
     graphics::{Bitmap, BitmapTable, LCDBitmapFlip, LCDSolidColor},
     rand::Rng,
     sprite::Sprite,
-    App, PLAYDATE,
+    PLAYDATE,
 };
 
 use crate::{
@@ -124,7 +124,7 @@ impl Obstacle {
     }
 
     pub fn update(&mut self, delta: f32) {
-        if *DinoGame::get().state.borrow() != GameState::Playing {
+        if DinoGame::get_game_state() != GameState::Playing {
             return;
         }
         let pos = self.sprite.get_position();

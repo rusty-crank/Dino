@@ -60,14 +60,14 @@ impl AnimationState for DinoState {
         let bounds = dino.sprite.get_bounds();
         // Idle -> Run
         if self == &Self::Idle {
-            if *DinoGame::get().state.borrow() != GameState::Ready {
+            if DinoGame::get_game_state() != GameState::Ready {
                 return Some(Self::Run);
             }
             return None;
         }
         // Run -> {Jump, Duck, Dead}
         if self == &Self::Run {
-            if *DinoGame::get().state.borrow() == GameState::Dead {
+            if DinoGame::get_game_state() == GameState::Dead {
                 return Some(Self::Dead);
             }
             if button_state.pushed.contains(Buttons::A) {
@@ -80,7 +80,7 @@ impl AnimationState for DinoState {
         }
         // Duck -> {Run, Dead}
         if self == &Self::Duck {
-            if *DinoGame::get().state.borrow() == GameState::Dead {
+            if DinoGame::get_game_state() == GameState::Dead {
                 return Some(Self::Dead);
             }
             if !button_state.current.contains(Buttons::B) {
@@ -90,7 +90,7 @@ impl AnimationState for DinoState {
         }
         // Jump -> {Run, Dead}
         if self == &Self::Jump {
-            if *DinoGame::get().state.borrow() == GameState::Dead {
+            if DinoGame::get_game_state() == GameState::Dead {
                 return Some(Self::Dead);
             }
             let bottom = DISPLAY_HEIGHT as f32 - bounds.height - bounds.y;
@@ -101,7 +101,7 @@ impl AnimationState for DinoState {
         }
         // Dead -> Run
         if self == &Self::Dead {
-            if *DinoGame::get().state.borrow() == GameState::Playing {
+            if DinoGame::get_game_state() == GameState::Playing {
                 return Some(Self::Run);
             }
             return None;
@@ -159,7 +159,7 @@ impl Dino {
         let old_state = self.animations.get_current_state();
         self.animations.update(&self.sprite, delta, self);
         let state = self.animations.get_current_state();
-        if *DinoGame::get().state.borrow() != GameState::Playing {
+        if DinoGame::get_game_state() != GameState::Playing {
             return;
         }
         // update collide rect

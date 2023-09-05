@@ -3,7 +3,7 @@ use playdate_rs::{
     graphics::{Bitmap, Font, LCDBitmapFlip, LCDSolidColor},
     math::Size,
     sprite::Sprite,
-    App, PLAYDATE,
+    PLAYDATE,
 };
 use spin::Lazy;
 
@@ -119,7 +119,7 @@ impl Mask {
     }
 
     pub fn update(&mut self, delta: f32) {
-        let game_state = *DinoGame::get().state.borrow();
+        let game_state = DinoGame::get_game_state();
 
         self.start_message
             .update(game_state == GameState::Ready, delta);
