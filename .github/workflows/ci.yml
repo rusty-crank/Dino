@@ -1,0 +1,64 @@
+name: Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+  PLAYDATE_SDK_VERSION: 2.0.3
+  PLAYDATE_SDK_PATH: ${{ github.workspace }}/PlaydateSDK
+
+jobs:
+  # Cargo crate style checks
+  style:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout repo
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Setup up rust toolchain
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+      # Format checks
+      - name: Cargo fmt checks
+        run: cargo fmt -- --check
+      - name: Cargo clippy checks
+        run: cargo clippy ${{ env.CARGO_BUILD_FLAGS }} -- -D warnings
+
+  # Cargo crate build tests
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - x86_64
+          - thumbv7em
+        profile:
+          - debug
+          - release
+    env:
+      CARGO_PLAYDATE_BUILD_FLAGS: ${{ matrix.target == 'thumbv7em' && '--device' || '' }} ${{ matrix.profile == 'release' && '--release' || '' }}
+      CARGO_TARGET: ${{ matrix.target == 'x86_64' && 'x86_64-unknown-linux-gnu' || 'thumbv7em-none-eabihf' }}
+    steps:
+      # Checkout repo
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Install Playdate SDK
+      - name: Install Playdate SDK
+        run: |
+          mkdir PlaydateSDK
+          curl -L https://download-keycdn.panic.com/playdate_sdk/Linux/PlaydateSDK-${{ env.PLAYDATE_SDK_VERSION }}.tar.gz | tar xz --strip 1 -C PlaydateSDK
+      # Setup up rust toolchain
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ env.CARGO_TARGET }}
+      # Setup playdate-cli
+      - name: Setup playdate-cli
+        run: cargo install playdate-cli
+      # Build crate
+      - name: Build playdate-rs project (${{ matrix.target }}, ${{ matrix.profile }})
+        run: cargo playdate build ${{ env.CARGO_PLAYDATE_BUILD_FLAGS }}

@@ -11,7 +11,6 @@ crate-type = ["cdylib", "staticlib"]
 [dependencies]
 playdate-rs = { path = "../playdate-rs/playdate-rs" }
 spin = "0.9.8"
-# playdate-rs = "0.0.7"
 
 # See all pdxinfo fields at https://github.com/rusty-crank/playdate-rs#pdxinfo-generation-and-bundling
 
