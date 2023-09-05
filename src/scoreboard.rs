@@ -37,7 +37,7 @@ impl Scoreboard {
         let score = (self.accumulated_time * 10.0) as i32;
         let text = format!("SCORE: {:03}", score);
         let bitmap = self.sprite.get_image().unwrap();
-        PLAYDATE.graphics.push_context(&bitmap);
+        PLAYDATE.graphics.push_context(bitmap);
         PLAYDATE.graphics.clear(crate::sprite_bg_color());
         PLAYDATE.graphics.set_font(&FONT);
         PLAYDATE.graphics.draw_text(

@@ -32,7 +32,7 @@ impl BitmapAnimation {
             frame_time,
             current_frame: RefCell::new(0),
             current_time: RefCell::new(0.0),
-            scale: scale,
+            scale,
         }
     }
 

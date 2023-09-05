@@ -104,9 +104,8 @@ enum GameState {
 }
 
 static FONT: Lazy<Font> = Lazy::new(|| {
-    let font = PLAYDATE
+    PLAYDATE
         .graphics
         .load_font("/System/Fonts/Roobert-10-Bold.pft")
-        .unwrap();
-    font
+        .unwrap()
 });

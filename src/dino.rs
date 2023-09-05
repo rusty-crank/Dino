@@ -190,14 +190,13 @@ impl Dino {
         }
         self.sprite.move_to(pos);
         let collisions = self.sprite.check_collisions(pos);
-        if collisions.len() > 0 {
-            if !collisions
+        if !collisions.is_empty()
+            && !collisions
                 .iter()
                 .all(|x| DinoGame::get().ground.sprite_is_ground(&x.other))
-            {
-                *DinoGame::get().state.borrow_mut() = GameState::Dead;
-                return;
-            }
+        {
+            *DinoGame::get().state.borrow_mut() = GameState::Dead;
+            return;
         }
         let pos2 = self.sprite.get_position();
         if pos2.y == old_y {

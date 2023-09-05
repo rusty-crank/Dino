@@ -115,7 +115,7 @@ impl Obstacle {
                 PLAYDATE.graphics.push_context(&image);
                 PLAYDATE
                     .graphics
-                    .draw_scaled_bitmap(&original_image, vec2!(0, 0), vec2!(0.5, 0.5));
+                    .draw_scaled_bitmap(original_image, vec2!(0, 0), vec2!(0.5, 0.5));
                 PLAYDATE.graphics.pop_context();
                 self.sprite
                     .set_image(image, LCDBitmapFlip::kBitmapUnflipped);
