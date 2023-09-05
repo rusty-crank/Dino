@@ -9,6 +9,7 @@ mod dino;
 mod ground;
 mod mask;
 mod obstacle;
+mod scoreboard;
 
 use core::cell::RefCell;
 
@@ -16,9 +17,12 @@ use dino::Dino;
 use ground::Ground;
 use mask::Mask;
 use obstacle::Obstacles;
-use playdate_rs::graphics::LCDSolidColor;
+use playdate_rs::graphics::{Font, LCDSolidColor};
 use playdate_rs::system::Buttons;
 use playdate_rs::{app, println, App, PLAYDATE};
+use spin::Lazy;
+
+use crate::scoreboard::Scoreboard;
 
 const SHOW_BOUNDING_BOX: bool = false;
 
@@ -36,6 +40,7 @@ pub struct DinoGame {
     ground: Ground,
     obstacles: Obstacles,
     mask: Mask,
+    scoreboard: Scoreboard,
     state: RefCell<GameState>,
 }
 
@@ -53,6 +58,7 @@ impl DinoGame {
         self.ground.reset();
         self.dino.reset();
         self.obstacles.reset();
+        self.scoreboard.reset();
         *self.state.borrow_mut() = GameState::Playing;
     }
 }
@@ -65,6 +71,7 @@ impl App for DinoGame {
             ground: Ground::new(),
             obstacles: Obstacles::new(),
             mask: Mask::new(),
+            scoreboard: Scoreboard::new(),
             state: RefCell::new(GameState::Ready),
         }
     }
@@ -82,6 +89,7 @@ impl App for DinoGame {
         self.dino.update(delta);
         self.obstacles.update(delta);
         self.mask.update(delta);
+        self.scoreboard.update(delta);
         PLAYDATE.sprite.draw_sprites();
         // Draw FPS
         PLAYDATE.system.draw_fps(vec2!(0, 0));
@@ -94,3 +102,11 @@ enum GameState {
     Playing,
     Dead,
 }
+
+static FONT: Lazy<Font> = Lazy::new(|| {
+    let font = PLAYDATE
+        .graphics
+        .load_font("/System/Fonts/Roobert-10-Bold.pft")
+        .unwrap();
+    font
+});

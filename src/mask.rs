@@ -1,23 +1,15 @@
+use crate::FONT;
 use playdate_rs::{
     display::{DISPLAY_HEIGHT, DISPLAY_WIDTH},
-    graphics::{Bitmap, Font, LCDBitmapFlip, LCDSolidColor},
+    graphics::{Bitmap, LCDBitmapFlip, LCDSolidColor},
     math::Size,
     sprite::Sprite,
     PLAYDATE,
 };
-use spin::Lazy;
 
 use crate::{DinoGame, GameState};
 
 const MASK_SIZE: Size<f32> = size!(DISPLAY_WIDTH as f32 - 80.0, DISPLAY_HEIGHT as f32);
-
-static FONT: Lazy<Font> = Lazy::new(|| {
-    let font = PLAYDATE
-        .graphics
-        .load_font("/System/Fonts/Roobert-10-Bold.pft")
-        .unwrap();
-    font
-});
 
 struct MessageBox {
     sprite: Sprite,
