@@ -5,3 +5,10 @@
 The chrome dinosaur game on playdate, in Rust.
 
 ![demo](./demo.gif)
+
+# Getting Started
+
+1. Install playdate sdk
+2. `cargo install playdate-cli`
+3. Clone this repo
+4. `cargo playdate run`
