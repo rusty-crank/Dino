@@ -18,7 +18,7 @@ use ground::Ground;
 use mask::Mask;
 use obstacle::Obstacles;
 use playdate_rs::graphics::{Font, LCDSolidColor};
-use playdate_rs::system::Buttons;
+use playdate_rs::system::{Buttons, MenuItem};
 use playdate_rs::{app, println, App, PLAYDATE};
 use spin::Lazy;
 
@@ -42,9 +42,14 @@ pub struct DinoGame {
     mask: Mask,
     scoreboard: Scoreboard,
     state: RefCell<GameState>,
+    menu: MenuItem,
 }
 
 impl DinoGame {
+    fn enable_audio() -> bool {
+        Self::get().menu.get_value() != 0
+    }
+
     fn get_game_state() -> GameState {
         *Self::get().state.borrow()
     }
@@ -66,6 +71,9 @@ impl DinoGame {
 impl App for DinoGame {
     fn new() -> Self {
         println!("Hello, World!");
+        let menu = PLAYDATE
+            .system
+            .add_checkmark_menu_item("Audio", true, || {});
         Self {
             dino: Dino::new(),
             ground: Ground::new(),
@@ -73,6 +81,7 @@ impl App for DinoGame {
             mask: Mask::new(),
             scoreboard: Scoreboard::new(),
             state: RefCell::new(GameState::Ready),
+            menu,
         }
     }
 

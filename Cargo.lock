@@ -259,7 +259,7 @@ checksum = "19b17cddbe7ec3f8bc800887bab5e717348c95ea2ca0b1bf0837fb964dc67099"
 [[package]]
 name = "playdate-rs"
 version = "0.0.11"
-source = "git+https://github.com/rusty-crank/playdate-rs.git?branch=device-build#7754adeeb010e449a9bac0f64130a381aec8f188"
+source = "git+https://github.com/rusty-crank/playdate-rs.git?branch=device-build#371dbe64e8eb83a83122328f900a79005924f48e"
 dependencies = [
  "bitmask-enum",
  "no_std_io",
@@ -273,7 +273,7 @@ dependencies = [
 [[package]]
 name = "playdate-rs-macros"
 version = "0.0.11"
-source = "git+https://github.com/rusty-crank/playdate-rs.git?branch=device-build#7754adeeb010e449a9bac0f64130a381aec8f188"
+source = "git+https://github.com/rusty-crank/playdate-rs.git?branch=device-build#371dbe64e8eb83a83122328f900a79005924f48e"
 dependencies = [
  "quote",
  "syn",
@@ -282,7 +282,7 @@ dependencies = [
 [[package]]
 name = "playdate-rs-sys"
 version = "0.0.11"
-source = "git+https://github.com/rusty-crank/playdate-rs.git?branch=device-build#7754adeeb010e449a9bac0f64130a381aec8f188"
+source = "git+https://github.com/rusty-crank/playdate-rs.git?branch=device-build#371dbe64e8eb83a83122328f900a79005924f48e"
 dependencies = [
  "bindgen",
  "home",
