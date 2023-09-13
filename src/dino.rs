@@ -149,6 +149,47 @@ impl Dino {
         asm
     }
 
+    fn check_collisions_impl(&self, a: &Sprite, b: &Sprite) -> bool {
+        let a_bitmap = a.get_image().unwrap();
+        let a_bitmap_data = a_bitmap.get_bitmap_data();
+        let b_bounds = b.get_bounds();
+        let b_bitmap = b.get_image().unwrap();
+        let b_bitmap_data = b_bitmap.get_bitmap_data();
+        for i in 0..a_bitmap_data.size.height {
+            for j in 0..a_bitmap_data.size.width {
+                if !a_bitmap_data.get_pixel(vec2!(j as u32, i as u32)) {
+                    continue;
+                }
+                // This pixel is black. Check collision.
+                let pixel_world_pos = a.get_bounds().pos() + vec2!(j as f32, i as f32);
+                if !b_bounds.contains_point(pixel_world_pos) {
+                    continue;
+                }
+                let pixel_local_pos = pixel_world_pos - b.get_bounds().pos();
+                if b_bitmap_data
+                    .get_pixel(vec2!(pixel_local_pos.x as u32, pixel_local_pos.y as u32))
+                {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+
+    fn check_collisions(&self, pos: Vec2<f32>) -> bool {
+        let collisions = self.sprite.check_collisions(pos);
+        // Per-pixel collision detection.
+        for x in collisions {
+            if DinoGame::get().ground.sprite_is_ground(&x.other) {
+                continue;
+            }
+            if self.check_collisions_impl(&x.sprite, &x.other) {
+                return true;
+            }
+        }
+        false
+    }
+
     pub fn reset(&mut self) {
         self.sprite.move_to(INITLAL_POSITION);
         self.animations.reset();
@@ -189,12 +230,7 @@ impl Dino {
             pos.y = INITLAL_POSITION.y;
         }
         self.sprite.move_to(pos);
-        let collisions = self.sprite.check_collisions(pos);
-        if !collisions.is_empty()
-            && !collisions
-                .iter()
-                .all(|x| DinoGame::get().ground.sprite_is_ground(&x.other))
-        {
+        if self.check_collisions(pos) {
             *DinoGame::get().state.borrow_mut() = GameState::Dead;
             return;
         }
