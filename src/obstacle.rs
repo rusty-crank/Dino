@@ -39,7 +39,6 @@ impl ObstacleKind {
         ];
         let i: usize = playdate_rs::util::rand::rng().gen_range(0..kinds.len());
         kinds[i]
-        // ObstacleKind::Bird
     }
 }
 
@@ -78,9 +77,9 @@ impl Obstacle {
             ObstacleKind::Bird | ObstacleKind::LowBird => {
                 let image = Bitmap::new(size!(46, 34), LCDSolidColor::kColorClear);
                 let pos_y = if self.kind == ObstacleKind::Bird {
-                    BIRD_Y
-                } else {
                     BIRD_Y + 34.0
+                } else {
+                    BIRD_Y + 60.0
                 };
                 self.sprite
                     .set_image(image, LCDBitmapFlip::kBitmapUnflipped);
