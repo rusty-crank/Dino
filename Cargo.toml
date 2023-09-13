@@ -9,14 +9,16 @@ crate-type = ["cdylib", "staticlib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-playdate-rs = "0.0.11"
+# playdate-rs = "0.0.11"
+playdate-rs = { git = "https://github.com/rusty-crank/playdate-rs.git", branch = "device-build" }
 # playdate-rs = { path = "../playdate-rs/playdate-rs" }
 spin = "0.9.8"
 
 # See all pdxinfo fields at https://github.com/rusty-crank/playdate-rs#pdxinfo-generation-and-bundling
 
 [package.metadata.pdxinfo]
-bundle_id = "com.example.dino"
+name = "Dino"
+bundle_id = "me.wenyu.playdate.dino"
 description = "A hello world example for the Playdate"
 
 [profile.dev]
