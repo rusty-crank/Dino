@@ -83,8 +83,9 @@ struct MaxRecord {
 
 impl MaxRecord {
     pub fn new() -> Self {
-        let mut file = File::open("record", FileOptions::kFileRead).unwrap();
-        let value = file.read_to_string().unwrap().parse::<i32>().unwrap();
+        let value = File::open("record", FileOptions::kFileReadData)
+            .map(|mut f| f.read_to_string().unwrap().parse::<i32>().unwrap())
+            .unwrap_or_default();
         Self { value }
     }
 
