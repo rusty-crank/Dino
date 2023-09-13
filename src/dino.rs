@@ -211,8 +211,8 @@ impl Dino {
         // update velocity
         let mut velocity = self.vertical_velocity.borrow_mut();
         match (old_state, state) {
-            (DinoState::Idle, DinoState::Run) => *velocity = -300.0,
-            (DinoState::Run, DinoState::Jump) => *velocity = -300.0,
+            (DinoState::Idle, DinoState::Run) => *velocity = -430.0,
+            (DinoState::Run, DinoState::Jump) => *velocity = -430.0,
             (DinoState::Dead, DinoState::Run) => {
                 self.sprite.move_to(INITLAL_POSITION);
                 *velocity = 0.0;
@@ -220,7 +220,7 @@ impl Dino {
             _ => {}
         }
         // 2. add gravity
-        *velocity += 500.0 * delta;
+        *velocity += 800.0 * delta;
         // update position
         let step = *velocity * delta;
         let mut pos = self.sprite.get_position();
