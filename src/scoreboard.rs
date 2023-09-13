@@ -1,6 +1,7 @@
 use playdate_rs::{
     display::{DISPLAY_HEIGHT, DISPLAY_WIDTH},
     graphics::{Bitmap, LCDBitmapFlip, LCDSolidColor},
+    sound::FilePlayer,
     sprite::Sprite,
     PLAYDATE,
 };
@@ -10,6 +11,7 @@ use crate::{DinoGame, GameState, FONT};
 pub struct Scoreboard {
     accumulated_time: f32,
     sprite: Sprite,
+    achievement_audio: FilePlayer,
 }
 
 impl Scoreboard {
@@ -26,6 +28,7 @@ impl Scoreboard {
         Self {
             accumulated_time: 0.0,
             sprite,
+            achievement_audio: FilePlayer::open("achievement").unwrap(),
         }
     }
 
@@ -33,8 +36,12 @@ impl Scoreboard {
         self.accumulated_time = 0.0;
     }
 
+    fn get_score(&self) -> i32 {
+        (self.accumulated_time * 10.0) as i32
+    }
+
     fn update_sprite(&mut self) {
-        let score = (self.accumulated_time * 10.0) as i32;
+        let score = self.get_score();
         let text = format!("SCORE: {:03}", score);
         let bitmap = self.sprite.get_image().unwrap();
         PLAYDATE.graphics.push_context(bitmap);
@@ -54,6 +61,10 @@ impl Scoreboard {
         let state = DinoGame::get_game_state();
         if state == GameState::Playing {
             self.accumulated_time += delta;
+            let score = self.get_score();
+            if score > 0 && score % 100 == 0 {
+                self.achievement_audio.play(1);
+            }
         }
         self.update_sprite();
     }

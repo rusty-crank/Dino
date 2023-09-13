@@ -4,6 +4,7 @@ use playdate_rs::{
     display::DISPLAY_HEIGHT,
     graphics::{Bitmap, LCDBitmapFlip, LCDSolidColor},
     math::{Rect, Size, Vec2},
+    sound::FilePlayer,
     sprite::Sprite,
     system::Buttons,
     App, PLAYDATE,
@@ -58,7 +59,7 @@ impl AnimationState for DinoState {
     fn transition(&self, dino: &Dino, _delta: f32) -> Option<Self> {
         let button_state = PLAYDATE.system.get_button_state();
         let bounds = dino.sprite.get_bounds();
-        // Idle -> Run
+        // Idle -> Jump
         if self == &Self::Idle {
             if DinoGame::get_game_state() != GameState::Ready {
                 return Some(Self::Run);
@@ -114,6 +115,8 @@ pub struct Dino {
     animations: AnimationStateMachine<DinoState>,
     sprite: Sprite,
     vertical_velocity: RefCell<f32>,
+    jump_audio: FilePlayer,
+    dead_audio: FilePlayer,
 }
 
 impl Dino {
@@ -132,6 +135,8 @@ impl Dino {
             sprite,
             animations: Self::create_animation_state_machine(),
             vertical_velocity: RefCell::new(0.0),
+            jump_audio: FilePlayer::open("jump").unwrap(),
+            dead_audio: FilePlayer::open("dead").unwrap(),
         }
     }
 
@@ -203,6 +208,12 @@ impl Dino {
         if DinoGame::get_game_state() != GameState::Playing {
             return;
         }
+        // play jump audio when jumping
+        if (old_state != DinoState::Jump && state == DinoState::Jump)
+            || (old_state == DinoState::Idle)
+        {
+            self.jump_audio.play(1);
+        }
         // update collide rect
         self.sprite.set_collide_rect(match state {
             DinoState::Duck => DUCK_COLLIDE_RECT,
@@ -232,6 +243,8 @@ impl Dino {
         self.sprite.move_to(pos);
         if self.check_collisions(pos) {
             *DinoGame::get().state.borrow_mut() = GameState::Dead;
+            // play dead audio
+            self.dead_audio.play(1);
             return;
         }
         let pos2 = self.sprite.get_position();
