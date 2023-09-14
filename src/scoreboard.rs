@@ -66,7 +66,7 @@ impl Scoreboard {
         if state == GameState::Playing {
             self.accumulated_time += delta;
             let score = self.get_score();
-            if DinoGame::enable_audio() && score > 0 && score % 100 == 0 {
+            if score > 0 && score % 100 == 0 {
                 self.achievement_audio.play(1);
             }
         }

@@ -209,9 +209,8 @@ impl Dino {
             return;
         }
         // play jump audio when jumping
-        if DinoGame::enable_audio()
-            && ((old_state != DinoState::Jump && state == DinoState::Jump)
-                || (old_state == DinoState::Idle))
+        if (old_state != DinoState::Jump && state == DinoState::Jump)
+            || (old_state == DinoState::Idle)
         {
             self.jump_audio.play(1);
         }
@@ -245,9 +244,7 @@ impl Dino {
         if self.check_collisions(pos) {
             *DinoGame::get().state.borrow_mut() = GameState::Dead;
             // play dead audio
-            if DinoGame::enable_audio() {
-                self.dead_audio.play(1);
-            }
+            self.dead_audio.play(1);
             return;
         }
         let pos2 = self.sprite.get_position();
