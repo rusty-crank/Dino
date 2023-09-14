@@ -18,7 +18,7 @@ use ground::Ground;
 use mask::Mask;
 use obstacle::Obstacles;
 use playdate_rs::graphics::{Font, LCDSolidColor};
-use playdate_rs::system::{Buttons, MenuItem};
+use playdate_rs::system::Buttons;
 use playdate_rs::{app, println, App, PLAYDATE};
 use spin::Lazy;
 
