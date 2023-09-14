@@ -18,7 +18,7 @@ use ground::Ground;
 use mask::Mask;
 use obstacle::Obstacles;
 use playdate_rs::graphics::{Font, LCDSolidColor};
-use playdate_rs::system::Buttons;
+use playdate_rs::system::{Buttons, MenuItem};
 use playdate_rs::{app, println, App, PLAYDATE};
 use spin::Lazy;
 
@@ -42,6 +42,7 @@ pub struct DinoGame {
     mask: Mask,
     scoreboard: Scoreboard,
     state: RefCell<GameState>,
+    _menu: MenuItem,
 }
 
 impl DinoGame {
@@ -73,6 +74,9 @@ impl App for DinoGame {
             mask: Mask::new(),
             scoreboard: Scoreboard::new(),
             state: RefCell::new(GameState::Ready),
+            _menu: PLAYDATE
+                .system
+                .add_menu_item(format!("Version: {}", env!("CARGO_PKG_VERSION")), || {}),
         }
     }
 
