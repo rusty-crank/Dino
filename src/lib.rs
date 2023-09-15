@@ -43,9 +43,10 @@ pub struct DinoGame {
     mask: Mask,
     scoreboard: Scoreboard,
     state: RefCell<GameState>,
-    _menu: MenuItem,
     last_invert_time_ms: usize,
     inverted: bool,
+    _version_menu: MenuItem,
+    fps_menu: MenuItem,
 }
 
 impl DinoGame {
@@ -83,9 +84,12 @@ impl App for DinoGame {
             mask: Mask::new(),
             scoreboard: Scoreboard::new(),
             state: RefCell::new(GameState::Ready),
-            _menu: PLAYDATE
+            _version_menu: PLAYDATE
                 .system
                 .add_menu_item(format!("Version: {}", env!("CARGO_PKG_VERSION")), || {}),
+            fps_menu: PLAYDATE
+                .system
+                .add_checkmark_menu_item("Show FPS", true, || {}),
             last_invert_time_ms: 0,
             inverted: false,
         }
@@ -117,7 +121,9 @@ impl App for DinoGame {
         self.scoreboard.update(delta);
         PLAYDATE.sprite.draw_sprites();
         // Draw FPS
-        PLAYDATE.system.draw_fps(vec2!(0, 0));
+        if self.fps_menu.get_value() == 1 {
+            PLAYDATE.system.draw_fps(vec2!(0, 0));
+        }
     }
 }
 
