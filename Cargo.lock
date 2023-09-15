@@ -259,8 +259,7 @@ checksum = "19b17cddbe7ec3f8bc800887bab5e717348c95ea2ca0b1bf0837fb964dc67099"
 [[package]]
 name = "playdate-rs"
 version = "0.0.13"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3d8f4ac7cab9b752202a2874b65e869b37d648a0d8571ad7f695a1001cec3cd0"
+source = "git+https://github.com/rusty-crank/playdate-rs.git#6e21e82d63bbaedb19c6c4f18e9e8902f53f8723"
 dependencies = [
  "bitmask-enum",
  "no_std_io",
@@ -274,8 +273,7 @@ dependencies = [
 [[package]]
 name = "playdate-rs-macros"
 version = "0.0.13"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2218baf8fb0c1dace10039f2a7eb64bab17a13dc4fb621f28ae6e8cf634a8ebe"
+source = "git+https://github.com/rusty-crank/playdate-rs.git#6e21e82d63bbaedb19c6c4f18e9e8902f53f8723"
 dependencies = [
  "quote",
  "syn",
@@ -284,8 +282,7 @@ dependencies = [
 [[package]]
 name = "playdate-rs-sys"
 version = "0.0.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "be872ca239fb7bb70111efc75dd4353f91badaa2fc77e7fd2c34e00eb9d7d73f"
+source = "git+https://github.com/rusty-crank/playdate-rs.git#6e21e82d63bbaedb19c6c4f18e9e8902f53f8723"
 dependencies = [
  "bindgen",
  "home",

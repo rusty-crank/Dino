@@ -3,7 +3,7 @@ use core::cell::RefCell;
 use playdate_rs::{
     display::DISPLAY_HEIGHT,
     graphics::{Bitmap, LCDBitmapFlip, LCDSolidColor},
-    math::{Rect, Size, Vec2},
+    math::{Rect, SideOffsets, Size, Vec2},
     sound::FilePlayer,
     sprite::Sprite,
     system::Buttons,
@@ -154,31 +154,26 @@ impl Dino {
         asm
     }
 
-    fn check_collisions_impl(&self, a: &Sprite, b: &Sprite) -> bool {
+    fn check_alpha_collisions(&self, a: &Sprite, b: &Sprite) -> bool {
         let a_bitmap = a.get_image().unwrap();
-        let a_bitmap_data = a_bitmap.get_bitmap_data();
+        let a_bounds = a.get_bounds();
         let b_bounds = b.get_bounds();
         let b_bitmap = b.get_image().unwrap();
-        let b_bitmap_data = b_bitmap.get_bitmap_data();
-        for i in 0..a_bitmap_data.size.height {
-            for j in 0..a_bitmap_data.size.width {
-                if !a_bitmap_data.get_pixel(vec2!(j as u32, i as u32)) {
-                    continue;
-                }
-                // This pixel is black. Check collision.
-                let pixel_world_pos = a.get_bounds().pos() + vec2!(j as f32, i as f32);
-                if !b_bounds.contains_point(pixel_world_pos) {
-                    continue;
-                }
-                let pixel_local_pos = pixel_world_pos - b.get_bounds().pos();
-                if b_bitmap_data
-                    .get_pixel(vec2!(pixel_local_pos.x as u32, pixel_local_pos.y as u32))
-                {
-                    return true;
-                }
-            }
-        }
-        false
+        a_bitmap.check_mask_collision(
+            a_bounds.x as _,
+            a_bounds.y as _,
+            LCDBitmapFlip::kBitmapUnflipped,
+            b_bitmap,
+            b_bounds.x as _,
+            b_bounds.y as _,
+            LCDBitmapFlip::kBitmapUnflipped,
+            SideOffsets {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+            },
+        )
     }
 
     fn check_collisions(&self, pos: Vec2<f32>) -> bool {
@@ -188,7 +183,7 @@ impl Dino {
             if DinoGame::get().ground.sprite_is_ground(&x.other) {
                 continue;
             }
-            if self.check_collisions_impl(&x.sprite, &x.other) {
+            if self.check_alpha_collisions(&x.sprite, &x.other) {
                 return true;
             }
         }
