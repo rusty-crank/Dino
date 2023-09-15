@@ -68,14 +68,13 @@ impl BGItems {
             let rect = x.sprite.get_bounds();
             rect.x + rect.width >= 0.0
         });
-        // If there are no items to the right of the screen, add new ones
+        // If there are no items outside the right edge of the screen, add new ones
         let has_hidden_items = self.items.iter().any(|x| {
             let rect = x.sprite.get_bounds();
             let x_right = rect.x + rect.width;
             x_right > DISPLAY_WIDTH as f32
         });
         if !has_hidden_items {
-            println!("new item");
             self.items.push(BGItem::new());
         }
     }
