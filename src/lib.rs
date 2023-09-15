@@ -11,6 +11,7 @@ mod ground;
 mod mask;
 mod obstacle;
 mod scoreboard;
+mod ui_layer;
 
 use core::cell::RefCell;
 
@@ -41,6 +42,7 @@ pub struct DinoGame {
     ground: Ground,
     obstacles: Obstacles,
     mask: Mask,
+    ui_layer: ui_layer::UILayer,
     scoreboard: Scoreboard,
     state: RefCell<GameState>,
     last_invert_time_ms: usize,
@@ -82,6 +84,7 @@ impl App for DinoGame {
             ground: Ground::new(),
             obstacles: Obstacles::new(),
             mask: Mask::new(),
+            ui_layer: ui_layer::UILayer::new(),
             scoreboard: Scoreboard::new(),
             state: RefCell::new(GameState::Ready),
             _version_menu: PLAYDATE
@@ -118,6 +121,7 @@ impl App for DinoGame {
         self.dino.update(delta);
         self.obstacles.update(delta);
         self.mask.update(delta);
+        self.ui_layer.update(delta);
         self.scoreboard.update(delta);
         PLAYDATE.sprite.draw_sprites();
         // Draw FPS
