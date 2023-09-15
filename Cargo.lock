@@ -258,9 +258,9 @@ checksum = "19b17cddbe7ec3f8bc800887bab5e717348c95ea2ca0b1bf0837fb964dc67099"
 
 [[package]]
 name = "playdate-rs"
-version = "0.0.12"
+version = "0.0.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2ba74a4db374e058dabc53d8b72dd834e47bdb50d61904059a2a21a539aa219e"
+checksum = "3d8f4ac7cab9b752202a2874b65e869b37d648a0d8571ad7f695a1001cec3cd0"
 dependencies = [
  "bitmask-enum",
  "no_std_io",
@@ -273,9 +273,9 @@ dependencies = [
 
 [[package]]
 name = "playdate-rs-macros"
-version = "0.0.12"
+version = "0.0.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "30e3e02428eb9831b1270bc7d21b592ffe46ccdcbb9a8ad0be19fe30a1c6ecd8"
+checksum = "2218baf8fb0c1dace10039f2a7eb64bab17a13dc4fb621f28ae6e8cf634a8ebe"
 dependencies = [
  "quote",
  "syn",
