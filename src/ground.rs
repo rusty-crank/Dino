@@ -46,7 +46,7 @@ impl Ground {
         self.ground_sprites
             .1
             .set_bounds(rect!(x: 2400.0, y: y, w: 2400.0, h: 24.0));
-        *self.horizontal_velocity.borrow_mut() = 150.0;
+        *self.horizontal_velocity.borrow_mut() = crate::args::INITIAL_MOVE_VELOCITY;
     }
 
     pub fn sprite_is_ground(&self, s: &Sprite) -> bool {
@@ -75,6 +75,9 @@ impl Ground {
             core::mem::swap(&mut self.ground_sprites.0, &mut self.ground_sprites.1);
         }
         // update velocity
-        *velocity += 10.0 * delta;
+        *velocity += crate::args::MOVE_ACCELERATION * delta;
+        if *velocity > crate::args::MAX_MOVE_VELOCITY {
+            *velocity = crate::args::MAX_MOVE_VELOCITY;
+        }
     }
 }

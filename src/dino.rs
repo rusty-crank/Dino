@@ -200,6 +200,16 @@ impl Dino {
         self.animations.reset();
     }
 
+    fn check_is_dead(&self, pos: Vec2<f32>) -> bool {
+        if self.check_collisions(pos) {
+            *DinoGame::get().state.borrow_mut() = GameState::Dead;
+            // play dead audio
+            self.dead_audio.play(1);
+            return true;
+        }
+        false
+    }
+
     pub fn update(&mut self, delta: f32) {
         // update animation and state
         let old_state = self.animations.get_current_state();
@@ -222,8 +232,8 @@ impl Dino {
         // update velocity
         let mut velocity = self.vertical_velocity.borrow_mut();
         match (old_state, state) {
-            (DinoState::Idle, DinoState::Run) => *velocity = -430.0,
-            (DinoState::Run, DinoState::Jump) => *velocity = -430.0,
+            (DinoState::Idle, DinoState::Run) => *velocity = crate::args::JUMP_VELOCITY,
+            (DinoState::Run, DinoState::Jump) => *velocity = crate::args::JUMP_VELOCITY,
             (DinoState::Dead, DinoState::Run) => {
                 self.sprite.move_to(INITLAL_POSITION);
                 *velocity = 0.0;
@@ -231,7 +241,7 @@ impl Dino {
             _ => {}
         }
         // 2. add gravity
-        *velocity += 800.0 * delta;
+        *velocity += crate::args::GRAVITY * delta;
         // update position
         let step = *velocity * delta;
         let mut pos = self.sprite.get_position();
@@ -240,11 +250,11 @@ impl Dino {
         if pos.y > INITLAL_POSITION.y {
             pos.y = INITLAL_POSITION.y;
         }
+        if self.check_is_dead(pos) {
+            return;
+        }
         self.sprite.move_to(pos);
-        if self.check_collisions(pos) {
-            *DinoGame::get().state.borrow_mut() = GameState::Dead;
-            // play dead audio
-            self.dead_audio.play(1);
+        if self.check_is_dead(pos) {
             return;
         }
         let pos2 = self.sprite.get_position();

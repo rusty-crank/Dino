@@ -5,6 +5,7 @@ extern crate alloc;
 extern crate playdate_rs;
 
 mod animation;
+mod args;
 mod dino;
 mod ground;
 mod mask;
