@@ -47,8 +47,8 @@ pub struct DinoGame {
     state: RefCell<GameState>,
     last_invert_time_ms: usize,
     inverted: bool,
-    _version_menu: MenuItem,
     fps_menu: MenuItem,
+    _version_menu: MenuItem,
 }
 
 impl DinoGame {
@@ -87,12 +87,12 @@ impl App for DinoGame {
             ui_layer: ui_layer::UILayer::new(),
             scoreboard: Scoreboard::new(),
             state: RefCell::new(GameState::Ready),
-            _version_menu: PLAYDATE
-                .system
-                .add_menu_item(format!("Version: {}", env!("CARGO_PKG_VERSION")), || {}),
             fps_menu: PLAYDATE
                 .system
                 .add_checkmark_menu_item("Show FPS", true, || {}),
+            _version_menu: PLAYDATE
+                .system
+                .add_menu_item(format!("Version: {}", env!("CARGO_PKG_VERSION")), || {}),
             last_invert_time_ms: 0,
             inverted: false,
         }
