@@ -46,7 +46,7 @@ impl Scoreboard {
 
     fn update_sprite(&mut self) {
         let score = self.get_score();
-        let text = format!("HI {:05} {:05}", self.record.get(), score);
+        let text = format!("HI  {:05}  {:05}", self.record.get(), score);
         let bitmap = self.sprite.get_image().unwrap();
         PLAYDATE.graphics.push_context(bitmap);
         PLAYDATE.graphics.clear(crate::sprite_bg_color());
