@@ -6,6 +6,7 @@ extern crate playdate_rs;
 
 mod animation;
 mod args;
+mod bg_items;
 mod dino;
 mod ground;
 mod mask;
@@ -41,6 +42,7 @@ pub struct DinoGame {
     dino: Dino,
     ground: Ground,
     obstacles: Obstacles,
+    bg_items: bg_items::BGItems,
     mask: Mask,
     ui_layer: ui_layer::UILayer,
     scoreboard: Scoreboard,
@@ -69,6 +71,7 @@ impl DinoGame {
     fn reset_and_start_game(&mut self) {
         self.ground.reset();
         self.dino.reset();
+        self.bg_items.reset();
         self.obstacles.reset();
         self.scoreboard.reset();
         *self.state.borrow_mut() = GameState::Playing;
@@ -82,6 +85,7 @@ impl App for DinoGame {
         Self {
             dino: Dino::new(),
             ground: Ground::new(),
+            bg_items: bg_items::BGItems::new(),
             obstacles: Obstacles::new(),
             mask: Mask::new(),
             ui_layer: ui_layer::UILayer::new(),
@@ -118,6 +122,7 @@ impl App for DinoGame {
         }
         // Update and draw sprites
         self.ground.update(delta);
+        self.bg_items.update(delta);
         self.dino.update(delta);
         self.obstacles.update(delta);
         self.mask.update(delta);
