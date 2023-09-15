@@ -7,7 +7,7 @@ This is a recreation of [Google Chrome's offline dinosaur game](https://www.rust
 
 The game is developed using the Rust programming language and is built upon [playdate-rs](https://github.com/rusty-crank/playdate-rs), a safe C-API binding for Rust. It serves as a showcase for the API binding, demonstrating its capabilities.
 
-Available for free at [wenyuzhao.itch.io/dino](https://wenyuzhao.itch.io/dino)
+Available for free at [wenyuzhao.itch.io/dino](https://wenyuzhao.itch.io/dino).
 
 ![demo](./demo.gif)
 
