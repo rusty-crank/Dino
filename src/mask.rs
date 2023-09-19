@@ -1,6 +1,6 @@
 use playdate_rs::{
     display::{DISPLAY_HEIGHT, DISPLAY_WIDTH},
-    graphics::{Bitmap, LCDBitmapFlip, LCDSolidColor},
+    graphics::{Bitmap, BitmapFlip, Color},
     math::Size,
     sprite::Sprite,
     PLAYDATE,
@@ -20,10 +20,10 @@ impl Mask {
         // Create left and right mask
         let bitmap = Bitmap::new(
             size!(MASK_SIZE.width as _, MASK_SIZE.height as _),
-            LCDSolidColor::kColorWhite,
+            Color::White,
         );
         let right_sprite = Sprite::new();
-        right_sprite.set_image(bitmap, LCDBitmapFlip::kBitmapUnflipped);
+        right_sprite.set_image(bitmap, BitmapFlip::Unflipped);
         right_sprite.set_z_index(10000);
         right_sprite.set_bounds(rect!(x: 100.0, y: 0.0, w: MASK_SIZE.width, h: MASK_SIZE.height));
         PLAYDATE.sprite.add_sprite(&right_sprite);

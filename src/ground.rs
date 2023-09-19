@@ -2,7 +2,7 @@ use core::cell::RefCell;
 
 use playdate_rs::{
     display::DISPLAY_HEIGHT,
-    graphics::{Bitmap, LCDBitmapFlip},
+    graphics::{Bitmap, BitmapFlip},
     sprite::Sprite,
     PLAYDATE,
 };
@@ -20,8 +20,8 @@ impl Ground {
 
     pub fn new() -> Self {
         let ground = Sprite::new();
-        let bitmap = Bitmap::open(size!(2400, 24), "ground").unwrap();
-        ground.set_image(bitmap, LCDBitmapFlip::kBitmapUnflipped);
+        let bitmap = Bitmap::open("ground").unwrap();
+        ground.set_image(bitmap, BitmapFlip::Unflipped);
         ground.set_collide_rect(rect!(x: 0.0, y: 18.0, w: 2400.0, h: Self::HEIGHT));
         ground.collisions_enabled();
         ground.set_z_index(-100);

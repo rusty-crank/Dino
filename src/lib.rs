@@ -20,7 +20,7 @@ use dino::Dino;
 use ground::Ground;
 use mask::Mask;
 use obstacle::Obstacles;
-use playdate_rs::graphics::{Font, LCDSolidColor};
+use playdate_rs::graphics::{Color, Font};
 use playdate_rs::system::{Buttons, MenuItem};
 use playdate_rs::{app, println, App, PLAYDATE};
 use spin::Lazy;
@@ -29,11 +29,11 @@ use crate::scoreboard::Scoreboard;
 
 const SHOW_BOUNDING_BOX: bool = false;
 
-fn sprite_bg_color() -> LCDSolidColor {
+fn sprite_bg_color() -> Color {
     if SHOW_BOUNDING_BOX {
-        LCDSolidColor::kColorBlack
+        Color::Black
     } else {
-        LCDSolidColor::kColorClear
+        Color::Clear
     }
 }
 
@@ -104,7 +104,7 @@ impl App for DinoGame {
 
     fn update(&mut self, delta: f32) {
         // Clear screen
-        PLAYDATE.graphics.clear(LCDSolidColor::kColorClear);
+        PLAYDATE.graphics.clear(Color::Clear);
         // Update game state
         let pushed = PLAYDATE.system.get_button_state().pushed;
         if self.is_ready_or_dead() && pushed.contains(Buttons::A) {

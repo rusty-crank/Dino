@@ -1,7 +1,7 @@
 use alloc::{sync::Arc, vec, vec::Vec};
 use playdate_rs::{
     display::{DISPLAY_HEIGHT, DISPLAY_WIDTH},
-    graphics::{Bitmap, BitmapTable, LCDBitmapFlip, LCDSolidColor},
+    graphics::{Bitmap, BitmapFlip, BitmapTable, Color},
     rand::Rng,
     sprite::Sprite,
     App, PLAYDATE,
@@ -75,14 +75,13 @@ impl Obstacle {
         println!("Create {:?}", self.kind);
         match self.kind {
             ObstacleKind::Bird | ObstacleKind::LowBird => {
-                let image = Bitmap::new(size!(46, 34), LCDSolidColor::kColorClear);
+                let image = Bitmap::new(size!(46, 34), Color::Clear);
                 let pos_y = if self.kind == ObstacleKind::Bird {
                     BIRD_Y + 34.0
                 } else {
                     BIRD_Y + 60.0
                 };
-                self.sprite
-                    .set_image(image, LCDBitmapFlip::kBitmapUnflipped);
+                self.sprite.set_image(image, BitmapFlip::Unflipped);
                 self.sprite
                     .set_bounds(rect!(x: pos_x, y: pos_y, w: 46.0, h: 34.0));
                 self.sprite
@@ -116,8 +115,7 @@ impl Obstacle {
                     .graphics
                     .draw_scaled_bitmap(original_image, vec2!(0, 0), vec2!(0.5, 0.5));
                 PLAYDATE.graphics.pop_context();
-                self.sprite
-                    .set_image(image, LCDBitmapFlip::kBitmapUnflipped);
+                self.sprite.set_image(image, BitmapFlip::Unflipped);
                 self.sprite
                     .set_bounds(rect!(x: pos_x, y: DISPLAY_HEIGHT as f32 - Ground::COLLIDE_HEIGHT - size.height as f32 / 2.0, w: size.width as f32 / 2.0, h: size.height as f32 / 2.0));
                 self.sprite.set_collide_rect(
@@ -164,12 +162,12 @@ impl Obstacles {
         Self {
             images: ObstacleImages {
                 bird: Arc::new(BitmapTable::open(2, 92, 68, "bird").unwrap()),
-                cactus_small1: Bitmap::open(size!(34, 70), "cactus/cactus-small-1").unwrap(),
-                cactus_small2: Bitmap::open(size!(68, 70), "cactus/cactus-small-2").unwrap(),
-                cactus_small3: Bitmap::open(size!(102, 70), "cactus/cactus-small-3").unwrap(),
-                cactus_big1: Bitmap::open(size!(50, 100), "cactus/cactus-big-1").unwrap(),
-                cactus_big2: Bitmap::open(size!(100, 100), "cactus/cactus-big-2").unwrap(),
-                cactus_big3: Bitmap::open(size!(150, 100), "cactus/cactus-big-3").unwrap(),
+                cactus_small1: Bitmap::open("cactus/cactus-small-1").unwrap(),
+                cactus_small2: Bitmap::open("cactus/cactus-small-2").unwrap(),
+                cactus_small3: Bitmap::open("cactus/cactus-small-3").unwrap(),
+                cactus_big1: Bitmap::open("cactus/cactus-big-1").unwrap(),
+                cactus_big2: Bitmap::open("cactus/cactus-big-2").unwrap(),
+                cactus_big3: Bitmap::open("cactus/cactus-big-3").unwrap(),
             },
             obstacles: vec![],
         }

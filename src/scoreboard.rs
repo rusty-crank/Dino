@@ -1,7 +1,7 @@
 use playdate_rs::{
     display::{DISPLAY_HEIGHT, DISPLAY_WIDTH},
     fs::{File, Write},
-    graphics::{Bitmap, LCDBitmapFlip, LCDSolidColor},
+    graphics::{Bitmap, BitmapFlip, Color},
     sound::FilePlayer,
     sprite::Sprite,
     sys::FileOptions,
@@ -19,12 +19,9 @@ pub struct Scoreboard {
 
 impl Scoreboard {
     pub fn new() -> Self {
-        let bitmap = Bitmap::new(
-            size!(DISPLAY_WIDTH as _, DISPLAY_HEIGHT as _),
-            LCDSolidColor::kColorClear,
-        );
+        let bitmap = Bitmap::new(size!(DISPLAY_WIDTH as _, DISPLAY_HEIGHT as _), Color::Clear);
         let sprite = Sprite::new();
-        sprite.set_image(bitmap, LCDBitmapFlip::kBitmapUnflipped);
+        sprite.set_image(bitmap, BitmapFlip::Unflipped);
         sprite.set_z_index(10000);
         sprite.set_bounds(rect!(x: 0.0, y: 0.0, w: DISPLAY_WIDTH as _, h: DISPLAY_HEIGHT as _));
         PLAYDATE.sprite.add_sprite(&sprite);

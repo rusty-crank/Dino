@@ -1,7 +1,7 @@
 use crate::FONT;
 use playdate_rs::{
     display::{DISPLAY_HEIGHT, DISPLAY_WIDTH},
-    graphics::{Bitmap, LCDBitmapFlip, LCDSolidColor},
+    graphics::{Bitmap, BitmapFlip, Color},
     math::Vec2,
     sprite::Sprite,
     PLAYDATE,
@@ -44,17 +44,14 @@ impl MessageBox {
         let text_width = FONT.get_text_width(&text, 0) as i32;
         let text_height = FONT.get_height() as i32;
         // Draw text to a bitmap
-        let bitmap = Bitmap::new(
-            size!(text_width as _, text_height as _),
-            LCDSolidColor::kColorWhite,
-        );
+        let bitmap = Bitmap::new(size!(text_width as _, text_height as _), Color::White);
         PLAYDATE.graphics.push_context(&bitmap);
         PLAYDATE.graphics.set_font(&FONT);
         PLAYDATE.graphics.draw_text(text, vec2!(0, 0));
         PLAYDATE.graphics.pop_context();
         // Create sprite
         let sprite = Sprite::new();
-        sprite.set_image(bitmap, LCDBitmapFlip::kBitmapUnflipped);
+        sprite.set_image(bitmap, BitmapFlip::Unflipped);
         sprite.set_z_index(20000);
         sprite.set_bounds(rect!(x: center.x - text_width as f32 / 2.0, y: center.y - text_height as f32 / 2.0, w: text_width as _, h: text_height as _));
         PLAYDATE.sprite.add_sprite(&sprite);
@@ -88,14 +85,14 @@ impl RestartPanel {
     fn new() -> Self {
         // Create game over icon
         let game_over_image = Sprite::new();
-        let bitmap = Bitmap::open(size!(390, 30), "game-over").unwrap();
-        let bitmap_scaled = Bitmap::new(size!(195, 15), LCDSolidColor::kColorClear);
+        let bitmap = Bitmap::open("game-over").unwrap();
+        let bitmap_scaled = Bitmap::new(size!(195, 15), Color::Clear);
         PLAYDATE.graphics.push_context(&bitmap_scaled);
         PLAYDATE
             .graphics
             .draw_scaled_bitmap(&bitmap, vec2!(0, 0), vec2!(0.5, 0.5));
         PLAYDATE.graphics.pop_context();
-        game_over_image.set_image(bitmap_scaled, LCDBitmapFlip::kBitmapUnflipped);
+        game_over_image.set_image(bitmap_scaled, BitmapFlip::Unflipped);
         game_over_image.set_z_index(10000);
         game_over_image.set_bounds(
             rect!(x: CENTER.x - 195.0 / 2.0, y:  CENTER.y - 16.0 - 20.0 - 30.0 , w: 390.0, h: 30.0),
@@ -103,14 +100,14 @@ impl RestartPanel {
         PLAYDATE.sprite.add_sprite(&game_over_image);
         // Create restart icon
         let restart_icon = Sprite::new();
-        let bitmap = Bitmap::open(size!(72, 64), "restart").unwrap();
-        let bitmap_scaled = Bitmap::new(size!(36, 32), LCDSolidColor::kColorClear);
+        let bitmap = Bitmap::open("restart").unwrap();
+        let bitmap_scaled = Bitmap::new(size!(36, 32), Color::Clear);
         PLAYDATE.graphics.push_context(&bitmap_scaled);
         PLAYDATE
             .graphics
             .draw_scaled_bitmap(&bitmap, vec2!(0, 0), vec2!(0.5, 0.5));
         PLAYDATE.graphics.pop_context();
-        restart_icon.set_image(bitmap_scaled, LCDBitmapFlip::kBitmapUnflipped);
+        restart_icon.set_image(bitmap_scaled, BitmapFlip::Unflipped);
         restart_icon.set_z_index(10000);
         restart_icon
             .set_bounds(rect!(x: CENTER.x - 18.0, y:  CENTER.y - 16.0 - 20.0, w: 36.0, h: 32.0));

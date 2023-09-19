@@ -2,7 +2,7 @@ use core::cell::RefCell;
 
 use playdate_rs::{
     display::DISPLAY_HEIGHT,
-    graphics::{Bitmap, LCDBitmapFlip, LCDSolidColor},
+    graphics::{Bitmap, BitmapFlip, Color},
     math::{Rect, SideOffsets, Size, Vec2},
     sound::FilePlayer,
     sprite::Sprite,
@@ -124,9 +124,9 @@ impl Dino {
         let sprite = Sprite::new();
         let bitmap = Bitmap::new(
             size!(SPRITE_SIZE.width as _, SPRITE_SIZE.height as _),
-            LCDSolidColor::kColorClear,
+            Color::Clear,
         );
-        sprite.set_image(bitmap, LCDBitmapFlip::kBitmapUnflipped);
+        sprite.set_image(bitmap, BitmapFlip::Unflipped);
         sprite.set_bounds(INITLAL_BOUNDS);
         sprite.set_collide_rect(COLLIDE_RECT);
         sprite.collisions_enabled();
@@ -162,11 +162,11 @@ impl Dino {
         a_bitmap.check_mask_collision(
             a_bounds.x as _,
             a_bounds.y as _,
-            LCDBitmapFlip::kBitmapUnflipped,
+            BitmapFlip::Unflipped,
             b_bitmap,
             b_bounds.x as _,
             b_bounds.y as _,
-            LCDBitmapFlip::kBitmapUnflipped,
+            BitmapFlip::Unflipped,
             SideOffsets {
                 top: 0,
                 right: 0,

@@ -1,7 +1,7 @@
 use alloc::{vec, vec::Vec};
 use playdate_rs::{
     display::{DISPLAY_HEIGHT, DISPLAY_WIDTH},
-    graphics::{Bitmap, LCDBitmapFlip},
+    graphics::{Bitmap, BitmapFlip},
     rand::Rng,
     sprite::Sprite,
     App, PLAYDATE,
@@ -20,8 +20,8 @@ impl BGItem {
             + playdate_rs::util::rand::rng().gen_range(0.0..=DISPLAY_WIDTH as f32 - 46.0 - 32.0);
         let pos_y = playdate_rs::util::rand::rng().gen_range(32.0..=DISPLAY_HEIGHT as f32 / 2.0);
         let cloud = Sprite::new();
-        let bitmap = Bitmap::open(size!(46, 14), "cloud").unwrap();
-        cloud.set_image(bitmap, LCDBitmapFlip::kBitmapUnflipped);
+        let bitmap = Bitmap::open("cloud").unwrap();
+        cloud.set_image(bitmap, BitmapFlip::Unflipped);
         cloud.set_z_index(-100);
         cloud.set_bounds(rect!(x: pos_x, y: pos_y, w: 46.0, h: 14.0));
         PLAYDATE.sprite.add_sprite(&cloud);
